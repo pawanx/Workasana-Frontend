@@ -1,0 +1,64 @@
+/* styles/settings.css */
+
+.settings-container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.settings-title {
+  margin-bottom: 20px;
+}
+
+/* card */
+
+.settings-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+/* form */
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4a6cf7;
+}
+
+/* checkbox */
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* button (reuse style) */
+
+.primary-btn {
+  padding: 8px 14px;
+  background: #4a6cf7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

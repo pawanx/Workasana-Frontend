@@ -1,0 +1,220 @@
+/* styles/dashboard.css */
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* buttons */
+.primary-btn {
+  padding: 8px 14px;
+  background: #4a6cf7;
+  color: white;
+  border: 1px solid blue;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.primary-btn:hover {
+  color: blue;
+  background-color: white;
+  border: 1px solid grey;
+}
+
+/* projects */
+.projects-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.project-card {
+  background: white;
+  padding: 16px;
+  width: 250px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  transition: 0.2s;
+}
+
+.project-card p {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.project-card h4 {
+  margin-top: 5px;
+  font-weight: 600;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+}
+
+/* tasks */
+.tasks-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.task-card {
+  background: white;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+
+  transition: all 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.task-meta {
+  font-size: 13px;
+  color: gray;
+}
+
+.owner {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+/* badges */
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* To Do */
+.badge.todo {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* In Progress */
+.badge.inprogress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Completed */
+.badge.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* Blocked (optional) */
+.badge.blocked {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge.active {
+  background: #213991;
+  color: #ffffff;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 320px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal input,
+textarea,
+select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.modal select[multiple] {
+  height: 125px;
+  padding: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-btn {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: grey;
+  color: white;
+  border-radius: 5px;
+}
+
+.success-msg {
+  background: #e6ffed;
+  color: #15803d;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.error-msg {
+  background: #ffe5e5;
+  color: #b91c1c;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.project-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.delete-btn {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.delete-btn:hover {
+  background: #d9363e;
+}

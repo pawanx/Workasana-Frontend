@@ -1,0 +1,82 @@
+.reports-container {
+  padding: 20px;
+}
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Cards */
+.chart-card {
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Headings */
+.chart-card h4 {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Hover effect */
+.chart-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  transition: 0.2s;
+}
+
+/* Chart wrapper */
+.chart-wrapper {
+  flex: 1;
+  position: relative;
+  height: 200px;
+}
+
+/* Pie Layout */
+.pie-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pie-chart {
+  width: 150px;
+  height: 150px;
+}
+
+.pie-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.legend-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-text {
+  flex: 1;
+  color: #333;
+}
+
+.legend-value {
+  font-weight: 500;
+  color: #555;
+}

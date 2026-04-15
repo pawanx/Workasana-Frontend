@@ -1,0 +1,172 @@
+/* styles/projects.css */
+
+.projects-container {
+  padding: 10px;
+}
+
+/* header */
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Body */
+/* Grid */
+.project-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Card */
+.project-card {
+  background: white;
+  padding: 16px;
+  width: 250px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  transition: 0.2s;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+}
+
+/* Top */
+.card-top {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Title */
+.project-card h3 {
+  margin: 10px 0 6px;
+  font-size: 18px;
+}
+
+/* Description */
+.project-card p {
+  font-size: 14px;
+  color: #666;
+  flex-grow: 1;
+}
+
+/* Footer */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+}
+
+.arrow {
+  font-size: 16px;
+}
+
+/* Status badges */
+.status {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Status colors */
+.status.active {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status.Completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status.InProgress {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.Blocked {
+  background: #ffcdcd;
+  color: #000000;
+}
+
+/* filters */
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.filters select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* task list */
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* task item */
+
+.task-item {
+  background: white;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 1px solid #e5e7eb;
+  transition: 0.2s;
+}
+
+.task-item:hover {
+  transform: translateY(-2px);
+}
+
+/* right side */
+
+.task-right {
+  text-align: right;
+}
+
+.owner {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+/* badges */
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.badge.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge.inprogress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* button (reuse style) */

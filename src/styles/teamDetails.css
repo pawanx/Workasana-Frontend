@@ -1,0 +1,79 @@
+.team-details-container {
+  padding: 20px;
+}
+
+/* back */
+.back-link {
+  color: #4a6cf7;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* section */
+.members-section {
+  margin-top: 20px;
+}
+
+.section-title {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+/* member row */
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* avatar */
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fde68a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #92400e;
+}
+
+/* button */
+.add-member-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+}
+
+.team-description {
+  margin-top: 6px;
+  color: #555;
+  font-size: 14px;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.add-member-box {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+}
+
+.add-member-box select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.add-actions {
+  display: flex;
+  gap: 8px;
+}

@@ -318,6 +318,12 @@ export default function Dashboard() {
             !tasksError &&
             tasks.map((task) => (
               <div className="task-card" key={task._id}>
+                <button
+                className="delete-icon"
+              onClick={() => handleDeleteTask(task._id)}
+  >
+              {deletingID === task._id ? "..." : "🗑"}
+               </button>
                 <span className={`badge ${getStatusClass(task.status)}`}>
                   {task.status}
                 </span>
@@ -330,12 +336,12 @@ export default function Dashboard() {
                 <p className="task-meta">
                   Days to complete: {task.timeToComplete}
                 </p>
-                <button
+                {/* <button
                   className="delete-btn"
                   onClick={() => handleDeleteTask(task._id)}
                 >
                   {deletingID === task._id ? "Deleting..." : "Delete"}
-                </button>
+                </button> */}
               </div>
             ))}
         </div>

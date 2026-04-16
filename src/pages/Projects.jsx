@@ -114,9 +114,9 @@ const Projects = () => {
               onClick={() => navigate(`/project/${project._id}`)}
             >
               <div className="card-top">
-                <span
-                  className={`badge ${getStatusClass(project.status)}`}
-                ></span>
+                <span className={`badge ${getStatusClass(project.status)}`}>
+                  {project.status}
+                </span>
               </div>
 
               <h3>{project.name}</h3>

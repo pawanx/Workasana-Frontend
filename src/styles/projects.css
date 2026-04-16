@@ -163,24 +163,6 @@
   margin-bottom: 5px;
 }
 
-/* badges */
-
-.badge {
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-}
-
-.badge.completed {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.badge.inprogress {
-  background: #fef3c7;
-  color: #92400e;
-}
-
 /* button (reuse style) */
 .state-center {
   display: flex;

@@ -11,6 +11,13 @@ export default function Teams() {
   const [teams, setTeams] = useState([]);
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+
   const [newTeam, setNewTeam] = useState({
     name: "",
     description: "",
@@ -40,7 +47,8 @@ export default function Teams() {
   }, []);
   const handleCreateTeam = async () => {
     if (!newTeam.name) {
-      console.log("Team name required");
+      setIsError(true);
+      setMessage("Team name required");
       return;
     }
 
@@ -67,15 +75,24 @@ export default function Teams() {
         members: [],
       });
 
-      setShowModal(false);
+      setIsError(false);
+      setMessage("Team created successfully");
+
+      setTimeout(() => {
+        setShowModal(false);
+        setMessage("");
+      }, 1500);
     } catch (error) {
       console.log("Create team error", error);
+      setIsError(true);
+      setMessage("Failed to create team");
     }
   };
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
+        setLoading(true);
         const token = localStorage.getItem("token");
         const res = await axios.get(`${BASE_URL}/teams`, {
           headers: {
@@ -84,8 +101,12 @@ export default function Teams() {
         });
 
         setTeams(res.data);
+        setError("");
       } catch (error) {
         console.log("Error getting teams", error);
+        setError("Failed to load teams");
+      } finally {
+        setLoading(false);
       }
     };
     fetchTeams();
@@ -103,20 +124,39 @@ export default function Teams() {
 
         {/* Teams List */}
         <div className="teams-list">
-          {teams.map((team) => (
-            <div
-              className="team-card"
-              key={team._id}
-              onClick={() => navigate(`/teams/${team._id}`)}
-              style={{ cursor: "pointer" }}
-            >
-              <h3>{team.name}</h3>
-              <p>{team.description}</p>
-              <p className="member-para">
-                Members: {team.members?.length || 0}
-              </p>
+          {loading && (
+            <div className="state-center">
+              <div className="loader"></div>
             </div>
-          ))}
+          )}
+
+          {!loading && error && (
+            <div className="state-center">
+              <p className="error-msg">{error}</p>
+            </div>
+          )}
+
+          {!loading && !error && teams.length === 0 && (
+            <div className="state-center">
+              <p className="empty-msg">No teams yet </p>
+            </div>
+          )}
+          {!loading &&
+            !error &&
+            teams.map((team) => (
+              <div
+                className="team-card"
+                key={team._id}
+                onClick={() => navigate(`/teams/${team._id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <h3>{team.name}</h3>
+                <p>{team.description}</p>
+                <p className="member-para">
+                  Members: {team.members?.length || 0}
+                </p>
+              </div>
+            ))}
         </div>
       </div>
       {showModal && (
@@ -205,6 +245,12 @@ export default function Teams() {
               <button className="primary-btn" onClick={handleCreateTeam}>
                 Create
               </button>
+
+              {message && (
+                <p className={isError ? "error-msg" : "success-msg"}>
+                  {message}
+                </p>
+              )}
             </div>
           </div>
         </div>

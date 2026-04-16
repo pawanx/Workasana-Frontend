@@ -16,14 +16,36 @@ export default function ProjectDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [sortBy, setSortBy] = useState("");
+
   const getStatusClass = (status) => {
-    return status.toLowerCase().replace(/\s+/g, "");
+    return status.toLowerCase().replace(/\s+/g, "") || "";
   };
 
   const filteredTasks = owner
     ? tasks.filter((task) => task.owners?.some((o) => o._id === owner))
     : tasks;
-  console.log(filteredTasks);
+
+  const processedTasks = [...filteredTasks];
+
+  if (sortBy === "time") {
+    processedTasks.sort(
+      (a, b) => (a.timeToComplete || 0) - (b.timeToComplete || 0),
+    );
+  }
+
+  if (sortBy === "status") {
+    const statusOrder = {
+      "To Do": 1,
+      "In Progress": 2,
+      Completed: 3,
+      Blocked: 4,
+    };
+
+    processedTasks.sort(
+      (a, b) => (statusOrder[a.status] || 5) - (statusOrder[b.status] || 5),
+    );
+  }
 
   //fetching users
   useEffect(() => {
@@ -80,7 +102,9 @@ export default function ProjectDetails() {
       <div className="projects-container">
         {/* Header */}
         <div className="projects-header">
-          Project: {loading ? "Loading..." : project?.name || "Not found"}
+          <h2>
+            Project: {loading ? "Loading..." : project?.name || "Not found"}
+          </h2>
           <button className="primary-btn">+ Add Task</button>
         </div>
 
@@ -99,10 +123,11 @@ export default function ProjectDetails() {
               </option>
             ))}
           </select>
-          <label htmlFor="filters">Filter by Due date/Priority:</label>
-          <select>
-            <option>Sort by Due Date</option>
-            <option>Priority</option>
+          <label htmlFor="filters">Filter by Time/Priority:</label>
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="">Default</option>
+            <option value="time">Time to complete</option>
+            <option value="status">Status</option>
           </select>
         </div>
 
@@ -130,7 +155,7 @@ export default function ProjectDetails() {
 
           {!loading &&
             !error &&
-            filteredTasks.map((task) => (
+            processedTasks.map((task) => (
               <div className="task-item" key={task._id}>
                 <div>
                   <h4>{task.name}</h4>
@@ -140,8 +165,8 @@ export default function ProjectDetails() {
 
                 <div className="task-right">
                   <span className="owner"></span>
-                  <span className={`badge ${getStatusClass(project.status)}`}>
-                    {project.status}
+                  <span className={`badge ${getStatusClass(task.status)}`}>
+                    {task.status}
                   </span>
                 </div>
               </div>

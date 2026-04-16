@@ -25,10 +25,12 @@
 .project-card {
   background: white;
   padding: 16px;
-  width: 250px;
+  width: 100%;
+  max-width: 250px;
   border-radius: 10px;
+  cursor: pointer;
   border: 1px solid #e5e7eb;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
 .project-card:hover {
@@ -82,17 +84,17 @@
   color: #1976d2;
 }
 
-.status.Completed {
+.status.completed {
   background: #e8f5e9;
   color: #2e7d32;
 }
 
-.status.InProgress {
+.status.inprogress {
   background: #fff3cd;
   color: #856404;
 }
 
-.status.Blocked {
+.status.blocked {
   background: #ffcdcd;
   color: #000000;
 }
@@ -132,7 +134,7 @@
   align-items: center;
 
   border: 1px solid #e5e7eb;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
 .task-item:hover {
@@ -170,3 +172,25 @@
 }
 
 /* button (reuse style) */
+.state-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+  flex-direction: column;
+}
+
+.loader {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #4a6cf7;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

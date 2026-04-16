@@ -9,6 +9,9 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  //added loading state and error message
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
@@ -47,11 +50,18 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        setLoading(true);
+
         const res = await axios.get(`${BASE_URL}/projects`);
-        console.log(res.data);
+
         setProjects(res.data);
+
+        setError("");
       } catch (error) {
-        console.log("Error while getting projects", err);
+        console.log("Error while getting projects", error);
+        setError("Failed to load projects");
+      } finally {
+        setLoading(false);
       }
     };
     fetchProjects();
@@ -69,27 +79,50 @@ const Projects = () => {
       </div>
 
       <div className="project-grid">
-        {projects.map((project) => (
-          <div
-            className="project-card"
-            key={project._id}
-            onClick={() => navigate(`/project/${project._id}`)}
-          >
-            <div className="card-top">
-              <span className={`status ${project.status}`}>
-                {project.status}
-              </span>
-            </div>
-
-            <h3>{project.name}</h3>
-            <p>{project.description || "No description provided."}</p>
-
-            <div className="card-footer">
-              <span>{new Date(project.createdAt).toLocaleDateString()}</span>
-              <span className="arrow">→</span>
-            </div>
+        {/* Loading */}
+        {loading && (
+          <div className="state-center">
+            <div className="loader"></div>
           </div>
-        ))}
+        )}
+
+        {/* Error */}
+        {!loading && error && (
+          <div className="state-center">
+            <p className="error-msg">{error}</p>
+          </div>
+        )}
+
+        {/* Empty */}
+        {!loading && !error && projects.length === 0 && (
+          <div className="state-center">
+            <p className="empty-msg">No projects yet 🚀</p>
+          </div>
+        )}
+
+        {!loading &&
+          !error &&
+          projects.map((project) => (
+            <div
+              className="project-card"
+              key={project._id}
+              onClick={() => navigate(`/project/${project._id}`)}
+            >
+              <div className="card-top">
+                <span
+                  className={`status ${project.status.toLowerCase().replace(/\s+/g, "")}`}
+                ></span>
+              </div>
+
+              <h3>{project.name}</h3>
+              <p>{project.description || "No description provided."}</p>
+
+              <div className="card-footer">
+                <span>{new Date(project.createdAt).toLocaleDateString()}</span>
+                <span className="arrow">→</span>
+              </div>
+            </div>
+          ))}
       </div>
       {showModal && (
         <div className="modal-overlay">

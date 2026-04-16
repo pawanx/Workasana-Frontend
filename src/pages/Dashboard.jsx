@@ -31,6 +31,14 @@ export default function Dashboard() {
     status: "To Do",
   });
 
+  // loading
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [tasksLoading, setTasksLoading] = useState(true);
+
+  // error
+  const [projectsError, setProjectsError] = useState("");
+  const [tasksError, setTasksError] = useState("");
+
   const handleDeleteTask = async (taskId) => {
     setDeletingID(taskId);
 
@@ -181,6 +189,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        setProjectsLoading(true);
         const token = localStorage.getItem("token");
         const res = await axios.get(`${BASE_URL}/projects`, {
           headers: {
@@ -188,15 +197,19 @@ export default function Dashboard() {
           },
         });
 
-        setIsError(false);
+        setProjectsError("");
         setProjects(res.data);
       } catch (error) {
+        setProjectsError("Failed to load projects");
         console.log("Unable to fetch projects error");
+      } finally {
+        setProjectsLoading(false);
       }
     };
 
     const fetchTasks = async () => {
       try {
+        setTasksLoading(true);
         const token = localStorage.getItem("token");
 
         const res = await axios.get(`${BASE_URL}/tasks`, {
@@ -206,8 +219,12 @@ export default function Dashboard() {
         });
 
         setTasks(res.data);
+        setTasksError("");
       } catch (error) {
         console.log("Error fetching tasks", error);
+        setTasksError("Failed to load tasks");
+      } finally {
+        setTasksLoading(false);
       }
     };
 
@@ -226,24 +243,43 @@ export default function Dashboard() {
         </div>
 
         <div className="projects-grid">
-          {projects.map((project) => (
-            <Link
-              to={`/project/${project._id}`}
-              className="project-link"
-              key={project._id}
-            >
-              <div className="project-card">
-                <span className={`badge ${getStatusClass(project.status)}`}>
-                  {project.status || "active"}
-                </span>
-                <h4>{project.name}</h4>
-                <p>
-                  {project.description ||
-                    "This is the beginning of the project"}
-                </p>
-              </div>
-            </Link>
-          ))}
+          {projectsLoading && (
+            <div className="state-center">
+              <div className="loader"></div>
+            </div>
+          )}
+
+          {!projectsLoading && projectsError && (
+            <div className="state-center">
+              <p className="error-msg">{projectsError}</p>
+            </div>
+          )}
+
+          {!projectsLoading && !projectsError && projects.length === 0 && (
+            <div className="state-center">
+              <p className="empty-msg">No projects yet .</p>
+            </div>
+          )}
+          {!projectsLoading &&
+            !projectsError &&
+            projects.map((project) => (
+              <Link
+                to={`/project/${project._id}`}
+                className="project-link"
+                key={project._id}
+              >
+                <div className="project-card">
+                  <span className={`badge ${getStatusClass(project.status)}`}>
+                    {project.status || "active"}
+                  </span>
+                  <h4>{project.name}</h4>
+                  <p>
+                    {project.description ||
+                      "This is the beginning of the project"}
+                  </p>
+                </div>
+              </Link>
+            ))}
         </div>
       </div>
 
@@ -260,28 +296,48 @@ export default function Dashboard() {
         </div>
 
         <div className="tasks-list">
-          {tasks.map((task) => (
-            <div className="task-card" key={task._id}>
-              <span className={`badge ${getStatusClass(task.status)}`}>
-                {task.status}
-              </span>
-
-              <h4>{task.name}</h4>
-
-              <span className="owner">
-                {task.owners?.map((o) => o.name).join(", ") || "No Owner"}
-              </span>
-              <p className="task-meta">
-                Days to complete: {task.timeToComplete}
-              </p>
-              <button
-                className="delete-btn"
-                onClick={() => handleDeleteTask(task._id)}
-              >
-                {deletingID === task._id ? "Deleting..." : "Delete"}
-              </button>
+          {tasksLoading && (
+            <div className="state-center">
+              <div className="loader"></div>
             </div>
-          ))}
+          )}
+
+          {!tasksLoading && tasksError && (
+            <div className="state-center">
+              <p className="error-msg">{tasksError}</p>
+            </div>
+          )}
+
+          {!tasksLoading && !tasksError && tasks.length === 0 && (
+            <div className="state-center">
+              <p className="empty-msg">No tasks assigned.</p>
+            </div>
+          )}
+
+          {!tasksLoading &&
+            !tasksError &&
+            tasks.map((task) => (
+              <div className="task-card" key={task._id}>
+                <span className={`badge ${getStatusClass(task.status)}`}>
+                  {task.status}
+                </span>
+
+                <h4>{task.name}</h4>
+
+                <span className="owner">
+                  {task.owners?.map((o) => o.name).join(", ") || "No Owner"}
+                </span>
+                <p className="task-meta">
+                  Days to complete: {task.timeToComplete}
+                </p>
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDeleteTask(task._id)}
+                >
+                  {deletingID === task._id ? "Deleting..." : "Delete"}
+                </button>
+              </div>
+            ))}
         </div>
       </div>
       {showModal && (

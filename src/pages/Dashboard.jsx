@@ -1,4 +1,3 @@
-// pages/Dashboard.jsx
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
@@ -6,22 +5,37 @@ import "../styles/dashboard.css";
 import axios from "axios";
 
 export default function Dashboard() {
+  const BASE_URL = "https://workasana-backend-khaki.vercel.app";
+
   const [teams, setTeams] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [deletingID, setDeletingID] = useState(null);
+  const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
+
+  const [deletingID, setDeletingID] = useState(null);
+
+  // messages
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [taskMessage, setTaskMessage] = useState("");
   const [taskError, setTaskError] = useState(false);
-  const [projects, setProjects] = useState([]);
+
+  // loading + error states
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [tasksLoading, setTasksLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState("");
+  const [tasksError, setTasksError] = useState("");
+
+  // modals
   const [showModal, setShowModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
+
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
     status: "To Do",
   });
+
   const [taskData, setTaskData] = useState({
     name: "",
     project: "",
@@ -33,16 +47,14 @@ export default function Dashboard() {
 
   const handleDeleteTask = async (taskId) => {
     setDeletingID(taskId);
-
     try {
       const token = localStorage.getItem("token");
 
       await axios.delete(`${BASE_URL}/tasks/${taskId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setTasks((prev) => prev.filter((task) => task._id !== taskId));
+
+      setTasks((prev) => prev.filter((t) => t._id !== taskId));
     } catch (error) {
       console.log(error);
     } finally {
@@ -50,17 +62,12 @@ export default function Dashboard() {
     }
   };
 
-  const BASE_URL = "https://workasana-backend-khaki.vercel.app";
-
   const handleOwnerChange = (e) => {
-    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-
+    const selected = Array.from(e.target.selectedOptions, (o) => o.value);
     setTaskData({ ...taskData, owners: selected });
   };
 
-  const getStatusClass = (status) => {
-    return status.toLowerCase().replace(/\s+/g, "");
-  };
+  const getStatusClass = (status) => status.toLowerCase().replace(/\s+/g, "");
 
   const handleInputChange = (e) => {
     setNewProject({ ...newProject, [e.target.name]: e.target.value });
@@ -71,23 +78,20 @@ export default function Dashboard() {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(`${BASE_URL}/projects`, newProject, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
+
+      setProjects((prev) => [...prev, res.data]);
       setMessage("Project Created Successfully.");
       setIsError(false);
-      setProjects((prev) => [...prev, res.data]);
+
       setNewProject({ name: "", description: "", status: "To Do" });
     } catch (error) {
       setIsError(true);
-      console.log("Error creating new Project", error);
       setMessage(error.response?.data?.message || "Failed to create project");
     }
 
-    setTimeout(() => {
-      setShowModal(false);
-    }, 4000);
+    setTimeout(() => setShowModal(false), 1500);
   };
 
   const handleCreateTask = async () => {
@@ -100,29 +104,19 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.post(`${BASE_URL}/tasks`, taskData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await axios.post(`${BASE_URL}/tasks`, taskData, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      // update UI instantly this is not working
-      //setTasks((prev) => [...prev, res.data]);
-      const fetchTasks = async () => {
-        const token = localStorage.getItem("token");
+      // refetch tasks
+      const res = await axios.get(`${BASE_URL}/tasks`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        const res = await axios.get(`${BASE_URL}/tasks`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setTasks(res.data);
-      };
-
-      await fetchTasks();
-
+      setTasks(res.data);
       setTaskError(false);
       setTaskMessage("Task created successfully");
-      // reset form
+
       setTaskData({
         name: "",
         project: "",
@@ -132,91 +126,86 @@ export default function Dashboard() {
         status: "To Do",
       });
 
-      // Close modal after short delay
       setTimeout(() => {
         setShowTaskModal(false);
         setTaskMessage("");
       }, 1500);
     } catch (error) {
-      console.log("Task create error", error);
       setTaskError(true);
       setTaskMessage(error.response?.data?.message || "Failed to create task");
     }
   };
 
+  // fetch users
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     axios
       .get(`${BASE_URL}/users`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUsers(res.data))
-      .catch((err) => console.log("User fetch error", err));
-
-    console.log(users);
+      .catch((err) => console.log(err));
   }, []);
 
+  // fetch teams
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     axios
       .get(`${BASE_URL}/teams`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setTeams(res.data))
-      .catch((err) => console.log("Team fetch error", err));
+      .catch((err) => console.log(err));
   }, []);
 
+  // auto clear message
   useEffect(() => {
     if (!message) return;
-
-    const timer = setTimeout(() => {
-      setMessage("");
-    }, 3000);
-
+    const timer = setTimeout(() => setMessage(""), 3000);
     return () => clearTimeout(timer);
   }, [message]);
 
+  // fetch projects + tasks
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     const fetchProjects = async () => {
       try {
-        const token = localStorage.getItem("token");
+        setProjectsLoading(true);
         const res = await axios.get(`${BASE_URL}/projects`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        setIsError(false);
         setProjects(res.data);
-      } catch (error) {
-        console.log("Unable to fetch projects error");
+        setProjectsError("");
+      } catch {
+        setProjectsError("Failed to load projects");
+      } finally {
+        setProjectsLoading(false);
       }
     };
 
     const fetchTasks = async () => {
       try {
-        const token = localStorage.getItem("token");
-
+        setTasksLoading(true);
         const res = await axios.get(`${BASE_URL}/tasks`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
         setTasks(res.data);
-      } catch (error) {
-        console.log("Error fetching tasks", error);
+        setTasksError("");
+      } catch {
+        setTasksError("Failed to load tasks");
+      } finally {
+        setTasksLoading(false);
       }
     };
 
     fetchProjects();
     fetchTasks();
   }, []);
+
   return (
     <Layout>
-      {/* ===== Projects Section ===== */}
+      {/* ===== Projects ===== */}
       <div className="section">
         <div className="section-header">
           <h2>Projects</h2>
@@ -226,28 +215,37 @@ export default function Dashboard() {
         </div>
 
         <div className="projects-grid">
-          {projects.map((project) => (
-            <Link
-              to={`/project/${project._id}`}
-              className="project-link"
-              key={project._id}
-            >
-              <div className="project-card">
-                <span className={`badge ${getStatusClass(project.status)}`}>
-                  {project.status || "active"}
-                </span>
-                <h4>{project.name}</h4>
-                <p>
-                  {project.description ||
-                    "This is the beginning of the project"}
-                </p>
-              </div>
-            </Link>
-          ))}
+          {projectsLoading && <p>Loading projects...</p>}
+
+          {!projectsLoading && projectsError && (
+            <p className="error-msg">{projectsError}</p>
+          )}
+
+          {!projectsLoading && !projectsError && projects.length === 0 && (
+            <p>No projects found 🚀</p>
+          )}
+
+          {!projectsLoading &&
+            !projectsError &&
+            projects.map((project) => (
+              <Link
+                to={`/project/${project._id}`}
+                key={project._id}
+                className="project-link"
+              >
+                <div className="project-card">
+                  <span className={`badge ${getStatusClass(project.status)}`}>
+                    {project.status}
+                  </span>
+                  <h4>{project.name}</h4>
+                  <p>{project.description}</p>
+                </div>
+              </Link>
+            ))}
         </div>
       </div>
 
-      {/* ===== Tasks Section ===== */}
+      {/* ===== Tasks ===== */}
       <div className="section">
         <div className="section-header">
           <h2>My Tasks</h2>
@@ -260,70 +258,72 @@ export default function Dashboard() {
         </div>
 
         <div className="tasks-list">
-          {tasks.map((task) => (
-            <div className="task-card" key={task._id}>
-              <span className={`badge ${getStatusClass(task.status)}`}>
-                {task.status}
-              </span>
+          {tasksLoading && <p>Loading tasks...</p>}
 
-              <h4>{task.name}</h4>
+          {!tasksLoading && tasksError && (
+            <p className="error-msg">{tasksError}</p>
+          )}
 
-              <span className="owner">
-                {task.owners?.map((o) => o.name).join(", ") || "No Owner"}
-              </span>
-              <p className="task-meta">
-                Days to complete: {task.timeToComplete}
-              </p>
-              <button
-                className="delete-btn"
-                onClick={() => handleDeleteTask(task._id)}
-              >
-                {deletingID === task._id ? "Deleting..." : "Delete"}
-              </button>
-            </div>
-          ))}
+          {!tasksLoading && !tasksError && tasks.length === 0 && (
+            <p>No tasks assigned 📭</p>
+          )}
+
+          {!tasksLoading &&
+            !tasksError &&
+            tasks.map((task) => (
+              <div className="task-card" key={task._id}>
+                <span className={`badge ${getStatusClass(task.status)}`}>
+                  {task.status}
+                </span>
+                <h4>{task.name}</h4>
+                <span className="owner">
+                  {task.owners?.map((o) => o.name).join(", ") || "No Owner"}
+                </span>
+                <p>Days: {task.timeToComplete}</p>
+
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDeleteTask(task._id)}
+                >
+                  {deletingID === task._id ? "Deleting..." : "Delete"}
+                </button>
+              </div>
+            ))}
         </div>
       </div>
+
+      {/* ===== Project Modal ===== */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
             <h3>Create Project</h3>
             <input
-              type="text"
-              placeholder="Project Name"
+              name="name"
+              placeholder="Name"
               value={newProject.name}
               onChange={handleInputChange}
-              name="name"
             />
             <textarea
               name="description"
-              id="description"
-              placeholder="Enter the description"
+              placeholder="Description"
               value={newProject.description}
               onChange={handleInputChange}
-            ></textarea>
+            />
             <select
               name="status"
-              id="status"
               value={newProject.status}
               onChange={handleInputChange}
             >
-              <option value="To Do">To Do</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-              <option value="Blocked">Blocked</option>
+              <option>To Do</option>
+              <option>In Progress</option>
+              <option>Completed</option>
             </select>
+
             <div className="modal-actions">
-              <button
-                onClick={() => setShowModal(false)}
-                className="cancel-btn"
-              >
-                Cancel
-              </button>
-              <button className="primary-btn" onClick={handleCreateProject}>
-                Create
-              </button>
+              <button onClick={() => setShowModal(false)}>Cancel</button>
+              <button onClick={handleCreateProject}>Create</button>
             </div>
+
             {message && (
               <p className={isError ? "error-msg" : "success-msg"}>{message}</p>
             )}
@@ -331,16 +331,14 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Show task modal */}
+      {/* ===== Task Modal ===== */}
       {showTaskModal && (
         <div className="modal-overlay">
           <div className="modal">
             <h3>Create Task</h3>
 
             <input
-              type="text"
               placeholder="Task Name"
-              name="name"
               value={taskData.name}
               onChange={(e) =>
                 setTaskData({ ...taskData, name: e.target.value })
@@ -348,7 +346,6 @@ export default function Dashboard() {
             />
 
             <select
-              name="project"
               value={taskData.project}
               onChange={(e) =>
                 setTaskData({ ...taskData, project: e.target.value })
@@ -362,31 +359,28 @@ export default function Dashboard() {
               ))}
             </select>
 
-            <label>Select Owners</label>
-
             <select
               multiple
-              onChange={handleOwnerChange}
               value={taskData.owners}
+              onChange={handleOwnerChange}
             >
-              {users.map((user) => (
-                <option key={user._id} value={user._id}>
-                  {user.name}
+              {users.map((u) => (
+                <option key={u._id} value={u._id}>
+                  {u.name}
                 </option>
               ))}
             </select>
 
             <select
-              name="team"
               value={taskData.team}
               onChange={(e) =>
                 setTaskData({ ...taskData, team: e.target.value })
               }
             >
               <option value="">Select Team</option>
-              {teams.map((team) => (
-                <option key={team._id} value={team._id}>
-                  {team.name}
+              {teams.map((t) => (
+                <option key={t._id} value={t._id}>
+                  {t.name}
                 </option>
               ))}
             </select>
@@ -403,30 +397,8 @@ export default function Dashboard() {
               }
             />
 
-            <select
-              value={taskData.status}
-              onChange={(e) =>
-                setTaskData({ ...taskData, status: e.target.value })
-              }
-            >
-              <option>To Do</option>
-              <option>In Progress</option>
-              <option>Completed</option>
-              <option>Blocked</option>
-            </select>
+            <button onClick={handleCreateTask}>Create Task</button>
 
-            <div className="modal-actions">
-              <button
-                className="cancel-btn"
-                onClick={() => setShowTaskModal(false)}
-              >
-                Cancel
-              </button>
-
-              <button className="primary-btn" onClick={handleCreateTask}>
-                Create Task
-              </button>
-            </div>
             {taskMessage && (
               <p className={taskError ? "error-msg" : "success-msg"}>
                 {taskMessage}

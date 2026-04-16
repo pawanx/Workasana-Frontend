@@ -13,12 +13,12 @@ export default function Settings() {
           <h3>Preferences</h3>
           <br />
           <div className="checkbox-group">
-            <input type="Radio" />
+            <input type="radio" name="mode" />
             <label>Light Mode</label>
           </div>
 
           <div className="checkbox-group">
-            <input type="Radio" />
+            <input type="radio" name="mode" />
             <label>Dark Mode</label>
           </div>
 

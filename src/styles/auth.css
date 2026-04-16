@@ -3,7 +3,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f6fa;
+  
+ background: radial-gradient(circle at 20% 30%, #dbeafe, transparent 40%),
+              radial-gradient(circle at 80% 70%, #e0f2fe, transparent 40%),
+              #f9fafb;
 }
 
 .login-box {

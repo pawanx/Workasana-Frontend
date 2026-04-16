@@ -23,6 +23,11 @@ const Projects = () => {
   const handleInputChange = (e) => {
     setNewProject({ ...newProject, [e.target.name]: e.target.value });
   };
+
+  const getStatusClass = (status) => {
+    return status.toLowerCase().replace(/\s+/g, "");
+  };
+
   const handleCreateProject = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -96,7 +101,7 @@ const Projects = () => {
         {/* Empty */}
         {!loading && !error && projects.length === 0 && (
           <div className="state-center">
-            <p className="empty-msg">No projects yet 🚀</p>
+            <p className="empty-msg">No projects yet.</p>
           </div>
         )}
 
@@ -110,7 +115,7 @@ const Projects = () => {
             >
               <div className="card-top">
                 <span
-                  className={`status ${project.status.toLowerCase().replace(/\s+/g, "")}`}
+                  className={`badge ${getStatusClass(project.status)}`}
                 ></span>
               </div>
 

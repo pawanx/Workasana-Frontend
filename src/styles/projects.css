@@ -71,34 +71,44 @@
   font-size: 16px;
 }
 
-/* Status badges */
-.status {
+.badge {
+  padding: 5px 10px;
+  border-radius: 999px;
   font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 6px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.3px;
 }
 
-/* Status colors */
-.status.active {
-  background: #e3f2fd;
-  color: #1976d2;
+/* To Do */
+.badge.todo {
+  background: #e0e7ff;
+  color: #3730a3;
 }
 
-.status.completed {
-  background: #e8f5e9;
-  color: #2e7d32;
+/* In Progress */
+.badge.inprogress {
+  background: #fef3c7;
+  color: #92400e;
 }
 
-.status.inprogress {
-  background: #fff3cd;
-  color: #856404;
+/* Completed */
+.badge.completed {
+  background: #d1fae5;
+  color: #065f46;
 }
 
-.status.blocked {
-  background: #ffcdcd;
-  color: #000000;
+/* Blocked (optional) */
+.badge.blocked {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
+.badge.active {
+  background: #213991;
+  color: #ffffff;
+}
 /* filters */
 
 .filters {

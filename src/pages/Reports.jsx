@@ -30,11 +30,14 @@ ChartJS.register(
 
 const Reports = () => {
   const [reportData, setReportData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const BASE_URL = "https://workasana-backend-khaki.vercel.app";
 
   useEffect(() => {
     const fetchReports = async () => {
       try {
+         setLoading(true);
         const token = localStorage.getItem("token");
 
         const res = await axios.get(`${BASE_URL}/reports`, {
@@ -44,15 +47,19 @@ const Reports = () => {
         });
 
         setReportData(res.data);
+        setError("");
       } catch (error) {
-        console.log("Error fetching reports", error);
+        cconsole.log("Error fetching reports", error);
+        setError("Failed to load reports");
+      }finally {
+        setLoading(false);
       }
     };
 
     fetchReports();
   }, []);
 
-  // 🎨 Colors
+  // Colors
   const generateColors = (count) => {
     const colors = [];
     for (let i = 0; i < count; i++) {
@@ -102,7 +109,7 @@ const Reports = () => {
     ],
   };
 
-  // ⚙️ Options
+  //  Options
   const commonOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -116,7 +123,7 @@ const Reports = () => {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false }, // ❌ disabled
+      legend: { display: false }, //  disabled
       tooltip: {
         enabled: true,
         callbacks: {
@@ -139,9 +146,27 @@ const Reports = () => {
     },
   };
 
-  if (!reportData) return <p>Loading reports...</p>;
 
-  const total = reportData.tasksByOwner.reduce((a, b) => a + b.count, 0);
+
+  const total = reportData?.tasksByOwner?.reduce((a, b) => a + b.count, 0) || 0;
+  if (loading) {
+    return (
+      <Layout>
+        <div className="state-center">
+          <div className="loader"></div>
+        </div>
+      </Layout>
+    );
+  }
+    if (!reportData || reportData.tasksByOwner?.length === 0) {
+    return (
+      <Layout>
+        <div className="state-center">
+          <p className="empty-msg">No report data available</p>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

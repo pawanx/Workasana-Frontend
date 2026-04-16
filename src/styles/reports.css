@@ -4,7 +4,7 @@
 
 .reports-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
 }
 
@@ -29,7 +29,7 @@
 .chart-card:hover {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
 /* Chart wrapper */

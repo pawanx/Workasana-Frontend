@@ -10,11 +10,18 @@ export default function ProjectDetails() {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState([]);
-  const [users, SetUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [owner, setOwner] = useState("");
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const getStatusClass = (status) => {
+    return status.toLowerCase().replace(/\s+/g, "");
+  };
+
   const filteredTasks = owner
-    ? tasks.filter((task) => task.owners.some((o) => o._id === owner))
+    ? tasks.filter((task) => task.owners?.some((o) => o._id === owner))
     : tasks;
   console.log(filteredTasks);
 
@@ -29,7 +36,7 @@ export default function ProjectDetails() {
             Authorization: `Bearer ${token}`,
           },
         });
-        SetUsers(res.data);
+        setUsers(res.data);
       } catch (error) {
         console.log("Error while fetching users", error);
       }
@@ -43,6 +50,8 @@ export default function ProjectDetails() {
       const token = localStorage.getItem("token");
 
       try {
+        setLoading(true);
+
         const projectRes = await axios.get(`${BASE_URL}/projects/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,8 +65,12 @@ export default function ProjectDetails() {
           },
         });
         setTasks(taskRes.data);
+        setError("");
       } catch (error) {
         console.log("Error fetching project data", error);
+        setError("Failed to load project");
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -67,8 +80,7 @@ export default function ProjectDetails() {
       <div className="projects-container">
         {/* Header */}
         <div className="projects-header">
-          <h2>Project: {project?.name}</h2>
-
+          Project: {loading ? "Loading..." : project?.name || "Not found"}
           <button className="primary-btn">+ Add Task</button>
         </div>
 
@@ -96,20 +108,44 @@ export default function ProjectDetails() {
 
         {/* Task List */}
         <div className="task-list">
-          {filteredTasks.map((task) => (
-            <div className="task-item" key={task._id}>
-              <div>
-                <h4>{task.name}</h4>
-                <p>Due: 25 Dec</p>
-                {task.owners?.map((o) => o.name).join(", ") || "Unassigned"}
-              </div>
-
-              <div className="task-right">
-                <span className="owner"></span>
-                <span className="badge inprogress">{task.status}</span>
-              </div>
+          {loading && (
+            <div className="state-center">
+              <div className="loader"></div>
             </div>
-          ))}
+          )}
+
+          {/* Error */}
+          {!loading && error && (
+            <div className="state-center">
+              <p className="error-msg">{error}</p>
+            </div>
+          )}
+
+          {/* Empty */}
+          {!loading && !error && filteredTasks.length === 0 && (
+            <div className="state-center">
+              <p className="empty-msg">No tasks in this project 📭</p>
+            </div>
+          )}
+
+          {!loading &&
+            !error &&
+            filteredTasks.map((task) => (
+              <div className="task-item" key={task._id}>
+                <div>
+                  <h4>{task.name}</h4>
+                  <p>Time to complete: {`${task.timeToComplete} days`}</p>
+                  {task.owners?.map((o) => o.name).join(", ") || "Unassigned"}
+                </div>
+
+                <div className="task-right">
+                  <span className="owner"></span>
+                  <span className={`badge ${getStatusClass(project.status)}`}>
+                    {project.status}
+                  </span>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
     </Layout>

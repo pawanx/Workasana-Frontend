@@ -218,3 +218,35 @@ select {
 .delete-btn:hover {
   background: #d9363e;
 }
+
+/* ===== State Styles ===== */
+
+.loading,
+.error-msg,
+.empty-msg {
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin: 10px 0;
+  display: inline-block;
+}
+
+/* Loading */
+.loading {
+  background-color: #f4f6f8;
+  color: #666;
+}
+
+/* Error */
+.error-msg {
+  background-color: #ffe5e5;
+  color: #d93025;
+  border: 1px solid #f5c2c0;
+}
+
+/* Empty */
+.empty-msg {
+  background-color: #f0f7ff;
+  color: #2b6cb0;
+  border: 1px dashed #90cdf4;
+}

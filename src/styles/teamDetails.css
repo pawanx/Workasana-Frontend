@@ -1,5 +1,6 @@
 .team-details-container {
   padding: 20px;
+  max-width: 800px;
 }
 
 /* back */
@@ -8,11 +9,18 @@
   cursor: pointer;
   font-size: 14px;
   margin-bottom: 10px;
+  
+}
+.back-link:hover {
+  text-decoration: underline;
 }
 
 /* section */
 .members-section {
   margin-top: 20px;
+    border-top: 1px solid #eee;
+  padding-top: 15px;
+
 }
 
 .section-title {
@@ -27,6 +35,12 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+.member-item:hover {
+  background: #f9fafb;
 }
 
 /* avatar */
@@ -40,6 +54,7 @@
   justify-content: center;
   font-weight: bold;
   color: #92400e;
+  font-size: 14px;
 }
 
 /* button */
@@ -65,6 +80,7 @@
   flex-direction: column;
   gap: 10px;
   max-width: 300px;
+  background: #fafafa;
 }
 
 .add-member-box select {
@@ -76,4 +92,5 @@
 .add-actions {
   display: flex;
   gap: 8px;
+  justify-content: flex-end;
 }

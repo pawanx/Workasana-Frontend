@@ -14,6 +14,10 @@ export default function TeamDetails() {
   const [showAddMember, setShowAddMember] = useState(false);
   const [selectedUser, setSelectedUser] = useState("");
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -37,6 +41,8 @@ export default function TeamDetails() {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
+        setLoading(true);
+
         const token = localStorage.getItem("token");
 
         const res = await axios.get(`${BASE_URL}/teams/${id}`, {
@@ -46,8 +52,11 @@ export default function TeamDetails() {
         });
 
         setTeam(res.data);
+         setError("");
       } catch (error) {
         console.log("Error fetching team", error);
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -73,12 +82,35 @@ export default function TeamDetails() {
       setTeam(res.data); // updated team from backend
       setSelectedUser("");
       setShowAddMember(false);
+       setMessage("Member added successfully");
+         setTimeout(() => {
+        setMessage("");
+      }, 1500);
     } catch (error) {
       console.log("Error adding member", error);
+      setMessage("Failed to add member");
     }
   };
 
-  if (!team) return <p>Loading...</p>;
+   if (loading) {
+    return (
+      <Layout>
+        <div className="state-center">
+          <div className="loader"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="state-center">
+          <p className="error-msg">{error}</p>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -94,6 +126,8 @@ export default function TeamDetails() {
         {team.description && (
           <p className="team-description">{team.description}</p>
         )}
+
+         {message && <p className="success-msg">{message}</p>}
 
         {/* Members */}
         <div className="members-section">
@@ -123,7 +157,11 @@ export default function TeamDetails() {
               >
                 <option value="">Select User</option>
 
-                {users.map((user) => (
+                {users
+                  .filter(
+                    (user) =>
+                      !team.members?.some((m) => m._id === user._id)
+                  ).map((user) => (
                   <option
                     key={user._id}
                     value={user._id}

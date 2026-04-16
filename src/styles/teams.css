@@ -88,7 +88,9 @@
   flex-direction: column;
   gap: 12px;
 }
-
+.modal p {
+  margin-top: 6px;
+}
 .modal input,
 .modal textarea,
 .modal select {

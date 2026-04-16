@@ -245,13 +245,12 @@ export default function Teams() {
               <button className="primary-btn" onClick={handleCreateTeam}>
                 Create
               </button>
-
-              {message && (
+            </div>
+             {message && (
                 <p className={isError ? "error-msg" : "success-msg"}>
                   {message}
                 </p>
               )}
-            </div>
           </div>
         </div>
       )}

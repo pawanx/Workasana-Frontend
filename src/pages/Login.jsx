@@ -10,6 +10,7 @@ const Login = () => {
   const BASE_URL = "https://workasana-backend-khaki.vercel.app/auth/login";
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   //used spread operator concept
@@ -28,26 +29,32 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    if (!form.email || !form.password) {
+      setMessage("Please fill all fields");
+      setIsError(true);
+      return;
+    }
+    setLoading(true);
     try {
       const res = await axios.post(BASE_URL, form);
-      console.log("Full response", res.data);
+      //console.log("Full response", res.data);
 
       //
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      console.log("If it is working:", localStorage.getItem("user"));
 
       setMessage("Login successful. Redirecting to Dashboard");
       setIsError(false);
 
       setTimeout(() => {
         navigate("/dashboard");
-      }, 3000);
+      }, 2000);
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed");
       setIsError(true);
       console.log("Login Error", error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -56,17 +63,19 @@ const Login = () => {
         <h2>Workasana Login</h2>
         <input
           type="email"
-          name="email"
+          name={form.email}
           placeholder="Enter email"
           onChange={handleChange}
         />
         <input
           type="password"
-          name="password"
+          name={form.password}
           placeholder="Enter password"
           onChange={handleChange}
         />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging In" : "Login"}
+        </button>
         <p>
           Don’t have an account? <Link to="/signup">Signup</Link>
         </p>

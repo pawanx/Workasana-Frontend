@@ -63,13 +63,15 @@ const Login = () => {
         <h2>Workasana Login</h2>
         <input
           type="email"
-          name={form.email}
+          value={form.email}
+          name="email"
           placeholder="Enter email"
           onChange={handleChange}
         />
         <input
           type="password"
-          name={form.password}
+          value={form.password}
+          name="password"
           placeholder="Enter password"
           onChange={handleChange}
         />

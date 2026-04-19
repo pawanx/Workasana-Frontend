@@ -34,11 +34,13 @@
 }
 
 .project-card {
+  position: relative;
   background: white;
   padding: 16px;
   width: 100%;
   max-width: 250px;
   border-radius: 10px;
+  min-height: 180px;
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
   cursor: pointer;

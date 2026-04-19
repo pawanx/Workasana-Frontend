@@ -231,6 +231,32 @@ export default function Dashboard() {
     fetchProjects();
     fetchTasks();
   }, []);
+
+  const handleStatusChange = async (taskId, newStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.patch(
+        `${BASE_URL}/tasks/${taskId}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // update UI instantly
+      setTasks((prev) =>
+        prev.map((task) =>
+          task._id === taskId ? { ...task, status: newStatus } : task,
+        ),
+      );
+    } catch (error) {
+      console.log("Status update failed", error);
+    }
+  };
+
   return (
     <Layout>
       {/* ===== Projects Section ===== */}
@@ -319,14 +345,22 @@ export default function Dashboard() {
             tasks.map((task) => (
               <div className="task-card" key={task._id}>
                 <button
-                className="delete-icon"
-              onClick={() => handleDeleteTask(task._id)}
-  >
-              {deletingID === task._id ? "..." : "🗑"}
-               </button>
-                <span className={`badge ${getStatusClass(task.status)}`}>
-                  {task.status}
-                </span>
+                  className="delete-icon"
+                  onClick={() => handleDeleteTask(task._id)}
+                >
+                  {deletingID === task._id ? "Deleting..." : "🗑"}
+                </button>
+
+                <select
+                  className={`badge ${getStatusClass(task.status)}`}
+                  value={task.status}
+                  onChange={(e) => handleStatusChange(task._id, e.target.value)}
+                >
+                  <option>To Do</option>
+                  <option>In Progress</option>
+                  <option>Completed</option>
+                  <option>Blocked</option>
+                </select>
 
                 <h4>{task.name}</h4>
 

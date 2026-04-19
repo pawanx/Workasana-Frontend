@@ -57,7 +57,13 @@ const Projects = () => {
       try {
         setLoading(true);
 
-        const res = await axios.get(`${BASE_URL}/projects`);
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(`${BASE_URL}/projects`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setProjects(res.data);
 

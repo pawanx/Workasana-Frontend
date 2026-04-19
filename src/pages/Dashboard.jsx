@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [teams, setTeams] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [deletingID, setDeletingID] = useState(null);
+  const [deletingProjectId, setDeletingProjectId] = useState(null);
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
@@ -55,6 +56,35 @@ export default function Dashboard() {
       console.log(error);
     } finally {
       setDeletingID(null);
+    }
+  };
+
+  // ✅ NEW
+  const handleDeleteProject = async (projectId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this project?",
+    );
+    if (!confirmDelete) return;
+
+    setDeletingProjectId(projectId);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.delete(`${BASE_URL}/projects/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // update UI instantly
+      setProjects((prev) =>
+        prev.filter((project) => project._id !== projectId),
+      );
+    } catch (error) {
+      console.log("Project delete error", error);
+    } finally {
+      setDeletingProjectId(null);
     }
   };
 
@@ -295,6 +325,15 @@ export default function Dashboard() {
                 key={project._id}
               >
                 <div className="project-card">
+                  <button
+                    className="delete-icon"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDeleteProject(project._id);
+                    }}
+                  >
+                    {deletingProjectId === project._id ? "Deleting..." : "🗑"}
+                  </button>
                   <span className={`badge ${getStatusClass(project.status)}`}>
                     {project.status || "active"}
                   </span>

@@ -9,6 +9,10 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editProject, setEditProject] = useState(null);
+
   //added loading state and error message
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -22,6 +26,13 @@ const Projects = () => {
 
   const handleInputChange = (e) => {
     setNewProject({ ...newProject, [e.target.name]: e.target.value });
+  };
+
+  const handleEditChange = (e) => {
+    setEditProject({
+      ...editProject,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const getStatusClass = (status) => {
@@ -50,6 +61,35 @@ const Projects = () => {
     setTimeout(() => {
       setShowModal(false);
     }, 4000);
+  };
+
+  const handleUpdateProject = async () => {
+    if (!editProject?.name) {
+      return alert("Project name is required");
+    }
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.patch(
+        `${BASE_URL}/projects/${editProject._id}`,
+        editProject,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // update UI instantly
+      setProjects((prev) =>
+        prev.map((p) => (p._id === editProject._id ? res.data : p)),
+      );
+
+      setShowEditModal(false);
+      setEditProject(null);
+    } catch (error) {
+      console.log("Update project error", error);
+    }
   };
 
   useEffect(() => {
@@ -119,6 +159,19 @@ const Projects = () => {
               key={project._id}
               onClick={() => navigate(`/project/${project._id}`)}
             >
+              <div className="card-actions">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent navigation
+                    e.preventDefault();
+                    setEditProject(project);
+                    setShowEditModal(true);
+                  }}
+                >
+                  ✏️
+                </button>
+              </div>
+
               <div className="card-top">
                 <span className={`badge ${getStatusClass(project.status)}`}>
                   {project.status}
@@ -178,6 +231,49 @@ const Projects = () => {
             {message && (
               <p className={isError ? "error-msg" : "success-msg"}>{message}</p>
             )}
+          </div>
+        </div>
+      )}
+
+      {showEditModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Edit Project</h3>
+
+            <input
+              name="name"
+              value={editProject?.name || ""}
+              onChange={handleEditChange}
+            />
+
+            <textarea
+              name="description"
+              value={editProject?.description || ""}
+              onChange={handleEditChange}
+            />
+
+            <select
+              name="status"
+              value={editProject?.status || "To Do"}
+              onChange={handleEditChange}
+            >
+              <option>To Do</option>
+              <option>In Progress</option>
+              <option>Completed</option>
+              <option>Blocked</option>
+            </select>
+
+            <div className="modal-actions">
+              <button
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditProject(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button onClick={handleUpdateProject}>Update</button>
+            </div>
           </div>
         </div>
       )}

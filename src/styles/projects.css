@@ -24,6 +24,7 @@
 /* Card */
 .project-card {
   background: white;
+  position: relative;
   padding: 16px;
   width: 100%;
   max-width: 250px;
@@ -185,4 +186,24 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* edit button container */
+.card-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+/* edit button */
+.card-actions button {
+  background: #eef2ff;
+  border: none;
+  padding: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.card-actions button:hover {
+  background: #e0e7ff;
 }

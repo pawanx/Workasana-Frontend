@@ -265,6 +265,7 @@ const Projects = () => {
 
             <div className="modal-actions">
               <button
+                className="cancel-btn"
                 onClick={() => {
                   setShowEditModal(false);
                   setEditProject(null);
@@ -272,7 +273,9 @@ const Projects = () => {
               >
                 Cancel
               </button>
-              <button onClick={handleUpdateProject}>Update</button>
+              <button className="primary-btn" onClick={handleUpdateProject}>
+                Update
+              </button>
             </div>
           </div>
         </div>

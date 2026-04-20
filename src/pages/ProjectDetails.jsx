@@ -165,6 +165,53 @@ export default function ProjectDetails() {
     };
     fetchData();
   }, [id]);
+
+  //delete task
+  const handleDeleteTask = async (taskId) => {
+    const confirmDelete = window.confirm("Delete this task?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.delete(`${BASE_URL}/tasks/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // update UI
+      setTasks((prev) => prev.filter((task) => task._id !== taskId));
+    } catch (error) {
+      console.log("Delete task error", error);
+    }
+  };
+
+  //update status
+  const handleStatusChange = async (taskId, newStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.patch(
+        `${BASE_URL}/tasks/${taskId}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // update UI instantly
+      setTasks((prev) =>
+        prev.map((task) =>
+          task._id === taskId ? { ...task, status: newStatus } : task,
+        ),
+      );
+    } catch (error) {
+      console.log("Status update error", error);
+    }
+  };
   return (
     <Layout>
       <div className="projects-container">
@@ -230,19 +277,35 @@ export default function ProjectDetails() {
             !error &&
             processedTasks.map((task) => (
               <div className="task-item" key={task._id}>
+                <button
+                  className="delete-icon"
+                  onClick={() => handleDeleteTask(task._id)}
+                >
+                  🗑
+                </button>
+
                 <div>
                   <h4>{task.name}</h4>
-                  <p>Time to complete: {`${task.timeToComplete} days`}</p>
+                  <p>Time to complete: {task.timeToComplete} days</p>
+
                   {task.owners && task.owners.length > 0
                     ? task.owners.map((o) => o.name).join(", ")
                     : "Unassigned"}
                 </div>
 
                 <div className="task-right">
-                  <span className="owner"></span>
-                  <span className={`badge ${getStatusClass(task.status)}`}>
-                    {task.status}
-                  </span>
+                  <select
+                    className={`badge ${getStatusClass(task.status)}`}
+                    value={task.status}
+                    onChange={(e) =>
+                      handleStatusChange(task._id, e.target.value)
+                    }
+                  >
+                    <option>To Do</option>
+                    <option>In Progress</option>
+                    <option>Completed</option>
+                    <option>Blocked</option>
+                  </select>
                 </div>
               </div>
             ))}

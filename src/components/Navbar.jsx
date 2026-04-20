@@ -19,7 +19,7 @@ export default function Navbar() {
   return (
     <div className="navbar">
       {/* Search */}
-      <input type="text" placeholder="Search..." className="search" />
+      <input type="text" placeholder="Search..." className="search" hidden />
 
       {/* Right side */}
       <div className="nav-right">

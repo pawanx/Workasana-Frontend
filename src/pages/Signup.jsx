@@ -6,7 +6,7 @@ import "../styles/auth.css";
 import axios from "axios";
 const Signup = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const BASE_URL = "https://workasana-backend-khaki.vercel.app/signup";
+  const BASE_URL = "https://workasana-backend-khaki.vercel.app/auth/signup";
   const navigate = useNavigate();
 
   //used spread operator concept

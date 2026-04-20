@@ -1,13 +1,9 @@
-// pages/Settings.jsx
 import Layout from "../components/Layout";
 import "../styles/settings.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
-  return (
-    <Layout>
-
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
@@ -35,26 +31,6 @@ const navigate = useNavigate();
           </button>
         </div>
       </div>
-
-      {/* <div className="settings-container">
-        <h2 className="settings-title">Settings</h2>
-
-        <div className="settings-card">
-          <h3>Preferences</h3>
-          <br />
-          <div className="checkbox-group">
-            <input type="radio" name="mode" />
-            <label>Light Mode</label>
-          </div>
-
-          <div className="checkbox-group">
-            <input type="radio" name="mode" />
-            <label>Dark Mode</label>
-          </div>
-
-          <button className="primary-btn">Save Preferences</button>
-        </div>
-      </div> */}
     </Layout>
   );
 }

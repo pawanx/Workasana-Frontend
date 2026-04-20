@@ -331,15 +331,24 @@ export default function Dashboard() {
                 className="project-link"
                 key={project._id}
               >
-                <div className="project-card">
+                <div
+                  className={`project-card ${
+                    deletingProjectId === project._id ? "deleting" : ""
+                  }`}
+                >
                   <button
                     className="delete-icon"
+                    disabled={deletingProjectId === project._id}
                     onClick={(e) => {
                       e.preventDefault();
                       handleDeleteProject(project._id);
                     }}
                   >
-                    {deletingProjectId === project._id ? "Deleting..." : "🗑"}
+                    {deletingProjectId === project._id ? (
+                      <span className="spinner"></span>
+                    ) : (
+                      "🗑"
+                    )}
                   </button>
                   <span className={`badge ${getStatusClass(project.status)}`}>
                     {project.status || "active"}
@@ -389,12 +398,22 @@ export default function Dashboard() {
           {!tasksLoading &&
             !tasksError &&
             tasks.map((task) => (
-              <div className="task-card" key={task._id}>
+              <div
+                className={`task-card ${
+                  deletingID === task._id ? "deleting" : ""
+                }`}
+                key={task._id}
+              >
                 <button
                   className="delete-icon"
+                  disabled={deletingID === task._id}
                   onClick={() => handleDeleteTask(task._id)}
                 >
-                  {deletingID === task._id ? "Deleting..." : "🗑"}
+                  {deletingID === task._id ? (
+                    <span className="spinner"></span>
+                  ) : (
+                    "🗑"
+                  )}
                 </button>
 
                 <select

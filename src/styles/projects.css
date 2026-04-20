@@ -80,6 +80,7 @@
   display: inline-flex;
   align-items: center;
   letter-spacing: 0.3px;
+  align-self: flex-start;
 }
 
 /* To Do */
@@ -139,6 +140,7 @@
   background: white;
   position: relative;
   padding: 16px;
+  padding-right: 45px;
   border-radius: 8px;
   margin-bottom: 10px;
   cursor: pointer;
@@ -167,6 +169,7 @@
 
 .task-right {
   text-align: right;
+  margin-right: 35px;
 }
 
 .owner {

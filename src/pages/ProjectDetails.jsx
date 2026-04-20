@@ -269,7 +269,11 @@ export default function ProjectDetails() {
           {/* Empty */}
           {!loading && !error && filteredTasks.length === 0 && (
             <div className="state-center">
-              <p className="empty-msg">No tasks in this project 📭</p>
+              <p className="empty-msg">
+                {owner
+                  ? "No tasks for the selected owner."
+                  : "No tasks in this project."}
+              </p>
             </div>
           )}
 

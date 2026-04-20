@@ -17,6 +17,7 @@ export default function ProjectDetails() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingTaskId, setDeletingTaskId] = useState(null);
 
   const [sortBy, setSortBy] = useState("");
 
@@ -170,7 +171,7 @@ export default function ProjectDetails() {
   const handleDeleteTask = async (taskId) => {
     const confirmDelete = window.confirm("Delete this task?");
     if (!confirmDelete) return;
-
+    setDeletingTaskId(taskId);
     try {
       const token = localStorage.getItem("token");
 
@@ -184,6 +185,8 @@ export default function ProjectDetails() {
       setTasks((prev) => prev.filter((task) => task._id !== taskId));
     } catch (error) {
       console.log("Delete task error", error);
+    } finally {
+      setDeletingTaskId(null);
     }
   };
 
@@ -280,12 +283,22 @@ export default function ProjectDetails() {
           {!loading &&
             !error &&
             processedTasks.map((task) => (
-              <div className="task-item" key={task._id}>
+              <div
+                className={`task-item ${
+                  deletingTaskId === task._id ? "deleting" : ""
+                }`}
+                key={task._id}
+              >
                 <button
                   className="delete-icon"
+                  disabled={deletingTaskId === task._id}
                   onClick={() => handleDeleteTask(task._id)}
                 >
-                  🗑
+                  {deletingTaskId === task._id ? (
+                    <span className="spinner"></span>
+                  ) : (
+                    "🗑"
+                  )}
                 </button>
 
                 <div>

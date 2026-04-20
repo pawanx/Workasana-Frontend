@@ -81,6 +81,13 @@ export default function Dashboard() {
       setProjects((prev) =>
         prev.filter((project) => project._id !== projectId),
       );
+
+      setTasks((prev) =>
+        prev.filter(
+          (task) =>
+            task.project !== projectId && task.project?._id !== projectId,
+        ),
+      );
     } catch (error) {
       console.log("Project delete error", error);
     } finally {

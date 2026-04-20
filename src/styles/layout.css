@@ -46,7 +46,7 @@
   background: white;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   padding: 0 20px;
 }

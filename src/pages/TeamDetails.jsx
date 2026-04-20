@@ -163,11 +163,13 @@ export default function TeamDetails() {
 
           {team.members?.map((member) => (
             <div key={member._id} className="member-item">
-              <div className="avatar">
-                {member.name?.charAt(0).toUpperCase()}
-              </div>
+              <div className="member-left">
+                <div className="avatar">
+                  {member.name?.charAt(0).toUpperCase()}
+                </div>
 
-              <span>{member.name}</span>
+                <span>{member.name}</span>
+              </div>
 
               {/*delete button */}
               <button

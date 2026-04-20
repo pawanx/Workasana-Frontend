@@ -31,6 +31,7 @@
 .member-item {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* important */
   gap: 10px;
   margin-bottom: 10px;
   padding: 6px;
@@ -40,7 +41,11 @@
 .member-item:hover {
   background: #f9fafb;
 }
-
+.member-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 /* avatar */
 .avatar {
   width: 32px;
@@ -94,12 +99,6 @@
 }
 
 /* remove button */
-.member-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
 
 .remove-btn {
   background: #f3f4f6;
@@ -108,7 +107,7 @@
   width: 24px;
   height: 24px;
   cursor: pointer;
-  color: #6b7280;
+  color: #374151;
   display: flex;
   align-items: center;
   justify-content: center;

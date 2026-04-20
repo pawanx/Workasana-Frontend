@@ -137,7 +137,8 @@
 
 .task-item {
   background: white;
-  padding: 14px;
+  position: relative;
+  padding: 16px;
   border-radius: 8px;
   margin-bottom: 10px;
   cursor: pointer;
@@ -240,7 +241,7 @@
   padding: 20px;
   border-radius: 12px;
   width: 90%;
-  max-width: 350px;
+  max-width: 420px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -305,4 +306,33 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ✅ NEW: delete icon */
+.delete-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  background: #f3f4f6;
+  border: none;
+  border-radius: 6px;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 14px;
+  color: #6b7280;
+
+  transition: all 0.2s ease;
+}
+
+.delete-icon:hover {
+  background: #fee2e2;
+  color: #dc2626;
 }

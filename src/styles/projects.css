@@ -114,9 +114,10 @@
 
 .filters {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 20px;
-  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .filters select {
@@ -142,10 +143,19 @@
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
+}
+
+.task-item h4 {
+  margin-bottom: 4px;
+}
+
+.task-item p {
+  font-size: 13px;
+  color: #666;
 }
 
 .task-item:hover {
@@ -206,4 +216,93 @@
 
 .card-actions button:hover {
   background: #e0e7ff;
+}
+
+/* css for modal */
+/* ===== Modal ===== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal input,
+.modal select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.modal select[multiple] {
+  height: 100px;
+}
+
+/* Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-btn {
+  padding: 6px 12px;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #d1d5db;
+}
+
+.primary-btn {
+  background: #4a6cf7;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #3b5bdb;
+}
+
+.primary-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -12,11 +12,23 @@ export default function ProjectDetails() {
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
   const [owner, setOwner] = useState("");
+  //for add task
+  const [teams, setTeams] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const [sortBy, setSortBy] = useState("");
+
+  // task modal and form
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [newTask, setNewTask] = useState({
+    name: "",
+    team: "",
+    owners: [],
+    timeToComplete: "",
+    status: "To Do",
+  });
 
   const getStatusClass = (status) => {
     return status.toLowerCase().replace(/\s+/g, "") || "";
@@ -47,6 +59,50 @@ export default function ProjectDetails() {
     );
   }
 
+  //handle for owner change
+  const handleOwnerChange = (e) => {
+    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+    setNewTask({ ...newTask, owners: selected });
+  };
+
+  //handle for create new task
+  const handleCreateTask = async () => {
+    if (!newTask.name || !newTask.team) {
+      return alert("Please fill required fields");
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(
+        `${BASE_URL}/tasks`,
+        {
+          ...newTask,
+          project: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setTasks((prev) => [...prev, res.data]);
+
+      setNewTask({
+        name: "",
+        team: "",
+        owners: [],
+        timeToComplete: "",
+        status: "To Do",
+      });
+
+      setShowTaskModal(false);
+    } catch (error) {
+      console.log("Create task error", error);
+    }
+  };
+
   //fetching users
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -64,6 +120,18 @@ export default function ProjectDetails() {
       }
     };
     fetchUsers();
+  }, []);
+
+  //fetching teams
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(`${BASE_URL}/teams`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setTeams(res.data))
+      .catch((err) => console.log("Team fetch error", err));
   }, []);
 
   // fetching tasks and project
@@ -173,6 +241,81 @@ export default function ProjectDetails() {
             ))}
         </div>
       </div>
+      {showTaskModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Create Task</h3>
+
+            <input
+              placeholder="Task Name"
+              value={newTask.name}
+              onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+            />
+
+            <select
+              value={newTask.team}
+              onChange={(e) => setNewTask({ ...newTask, team: e.target.value })}
+            >
+              <option value="">Select Team</option>
+              {teams.map((team) => (
+                <option key={team._id} value={team._id}>
+                  {team.name}
+                </option>
+              ))}
+            </select>
+
+            <label>Owners</label>
+            <select
+              multiple
+              value={newTask.owners}
+              onChange={handleOwnerChange}
+            >
+              {users.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+
+            <input
+              type="number"
+              placeholder="Days"
+              value={newTask.timeToComplete}
+              onChange={(e) =>
+                setNewTask({
+                  ...newTask,
+                  timeToComplete: e.target.value,
+                })
+              }
+            />
+
+            <select
+              value={newTask.status}
+              onChange={(e) =>
+                setNewTask({ ...newTask, status: e.target.value })
+              }
+            >
+              <option>To Do</option>
+              <option>In Progress</option>
+              <option>Completed</option>
+              <option>Blocked</option>
+            </select>
+
+            <div className="modal-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowTaskModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button className="primary-btn" onClick={handleCreateTask}>
+                Create Task
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

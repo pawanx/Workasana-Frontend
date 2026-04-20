@@ -52,10 +52,10 @@ export default function TeamDetails() {
         });
 
         setTeam(res.data);
-         setError("");
+        setError("");
       } catch (error) {
         console.log("Error fetching team", error);
-      }finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -82,8 +82,8 @@ export default function TeamDetails() {
       setTeam(res.data); // updated team from backend
       setSelectedUser("");
       setShowAddMember(false);
-       setMessage("Member added successfully");
-         setTimeout(() => {
+      setMessage("Member added successfully");
+      setTimeout(() => {
         setMessage("");
       }, 1500);
     } catch (error) {
@@ -92,7 +92,35 @@ export default function TeamDetails() {
     }
   };
 
-   if (loading) {
+  // delete team member
+  const handleRemoveMember = async (userId) => {
+    const confirmDelete = window.confirm("Remove this member?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.patch(
+        `${BASE_URL}/teams/${id}/remove-member`,
+        { userId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setTeam(res.data); // update UI
+      setMessage("Member removed successfully");
+
+      setTimeout(() => setMessage(""), 1500);
+    } catch (error) {
+      console.log("Remove member error", error);
+      setMessage("Failed to remove member");
+    }
+  };
+
+  if (loading) {
     return (
       <Layout>
         <div className="state-center">
@@ -127,7 +155,7 @@ export default function TeamDetails() {
           <p className="team-description">{team.description}</p>
         )}
 
-         {message && <p className="success-msg">{message}</p>}
+        {message && <p className="success-msg">{message}</p>}
 
         {/* Members */}
         <div className="members-section">
@@ -138,7 +166,16 @@ export default function TeamDetails() {
               <div className="avatar">
                 {member.name?.charAt(0).toUpperCase()}
               </div>
+
               <span>{member.name}</span>
+
+              {/*delete button */}
+              <button
+                className="remove-btn"
+                onClick={() => handleRemoveMember(member._id)}
+              >
+                ✕
+              </button>
             </div>
           ))}
 
@@ -159,17 +196,17 @@ export default function TeamDetails() {
 
                 {users
                   .filter(
-                    (user) =>
-                      !team.members?.some((m) => m._id === user._id)
-                  ).map((user) => (
-                  <option
-                    key={user._id}
-                    value={user._id}
-                    disabled={team.members.some((m) => m._id === user._id)}
-                  >
-                    {user.name}
-                  </option>
-                ))}
+                    (user) => !team.members?.some((m) => m._id === user._id),
+                  )
+                  .map((user) => (
+                    <option
+                      key={user._id}
+                      value={user._id}
+                      disabled={team.members.some((m) => m._id === user._id)}
+                    >
+                      {user.name}
+                    </option>
+                  ))}
               </select>
 
               <div className="add-actions">

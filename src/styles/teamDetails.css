@@ -9,7 +9,6 @@
   cursor: pointer;
   font-size: 14px;
   margin-bottom: 10px;
-  
 }
 .back-link:hover {
   text-decoration: underline;
@@ -18,9 +17,8 @@
 /* section */
 .members-section {
   margin-top: 20px;
-    border-top: 1px solid #eee;
+  border-top: 1px solid #eee;
   padding-top: 15px;
-
 }
 
 .section-title {
@@ -93,4 +91,30 @@
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+}
+
+/* remove button */
+.member-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.remove-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
 }

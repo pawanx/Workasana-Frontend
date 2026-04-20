@@ -173,7 +173,12 @@ export default function ProjectDetails() {
           <h2>
             Project: {loading ? "Loading..." : project?.name || "Not found"}
           </h2>
-          <button className="primary-btn">+ Add Task</button>
+          <button
+            className="primary-btn"
+            onClick={() => setShowTaskModal(true)}
+          >
+            + Add Task
+          </button>
         </div>
 
         {/* Filters */}
@@ -228,7 +233,9 @@ export default function ProjectDetails() {
                 <div>
                   <h4>{task.name}</h4>
                   <p>Time to complete: {`${task.timeToComplete} days`}</p>
-                  {task.owners?.map((o) => o.name).join(", ") || "Unassigned"}
+                  {task.owners && task.owners.length > 0
+                    ? task.owners.map((o) => o.name).join(", ")
+                    : "Unassigned"}
                 </div>
 
                 <div className="task-right">
@@ -304,12 +311,25 @@ export default function ProjectDetails() {
             <div className="modal-actions">
               <button
                 className="cancel-btn"
-                onClick={() => setShowTaskModal(false)}
+                onClick={() => {
+                  setShowTaskModal(false);
+                  setNewTask({
+                    name: "",
+                    team: "",
+                    owners: [],
+                    timeToComplete: "",
+                    status: "To Do",
+                  });
+                }}
               >
                 Cancel
               </button>
 
-              <button className="primary-btn" onClick={handleCreateTask}>
+              <button
+                className="primary-btn"
+                onClick={handleCreateTask}
+                disabled={!newTask.name || !newTask.team}
+              >
                 Create Task
               </button>
             </div>

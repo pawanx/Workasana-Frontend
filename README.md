@@ -8,7 +8,7 @@ Built with a React frontend, Node.js/Express backend, MongoDB database, and secu
 
 ## Demo Link
 
-[Live Demo](https://workasana-frontend.vercel.app/)
+[Live Demo](https://workasana-frontend-ashy.vercel.app/)
 
 ---
 
@@ -241,6 +241,66 @@ Sample Response:
   "success": true,
   "message": "Task deleted successfully"
 }
+```
+---
+
+### **POST /api/teams/**
+
+Create a new team:
+
+Sample response:
+
+```json
+{
+    "success" : true,
+    "message" : "Team created successfully.",
+    "team" : {
+        "name" : "Frontend",
+        "description" : "Frontend team",
+        "members" : ["34343232vdfvrev46sv44"],
+        "createdBy" : ["324vsv33vdvdfvdfvsv4ae"]
+    }
+}
+
+```
+
+---
+### **GET /api/teams/**
+
+Fetch the teams:
+
+Sample response:
+
+```json
+
+{
+    "success" : true,
+    "teams" : [
+        {
+             "name" : "Frontend",
+        "description" : "Frontend team",
+        "members" : ["34343232vdfvrev46sv44"],
+        "createdBy" : ["324vsv33vdvdfvdfvsv4ae"]
+        }
+    ]
+}
+
+```
+---
+
+### **PATCH /api/teams/:id/remove-member**
+
+Remove a member from the team:
+
+Sample response:
+
+```json
+
+{
+    "success" : true,
+    "message" : "Member removed successfully"
+}
+
 ```
 
 ---

@@ -325,11 +325,8 @@ Sample response:
 
 ## Future Improvements
 
-- Real-time notifications
-- Kanban drag-and-drop board
-- Team chat integration
-- Deadline reminders
-
+- Reminder for coming project deadlines.
+- AI integration to explain report
 ---
 
 ## Contact
